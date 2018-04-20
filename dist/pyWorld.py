@@ -143,11 +143,11 @@ def FlagGenerator(Color):
     OverColor1 = Palette[randint(0,len(Palette)-1)]
     OverColor2 = Palette[randint(0,len(Palette)-1)]
 
-    BackFile = open("Background.txt",'r')
-    OverlayFile = open("Overlay.txt",'r')
+    BackFile = open("./dist/Background.txt",'r')
+    OverlayFile = open("./dist/Overlay.txt",'r')
 
-    BTypes = (sum(1 for line in open('Background.txt')) + 1) / 5
-    OTypes = (sum(1 for line in open('Overlay.txt')) + 1) / 5
+    BTypes = (sum(1 for line in BackFile) + 1) / 5
+    OTypes = (sum(1 for line in OverlayFile) + 1) / 5
 
     Back = randint(1, BTypes)
     Overlay = randint(1, OTypes)
@@ -425,7 +425,7 @@ def MasterWorldGen():    #------------------------------------------------------
     noisehm = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)
     noise2d = libtcod.noise_new(2,libtcod.NOISE_DEFAULT_HURST, libtcod.NOISE_DEFAULT_LACUNARITY)
     #libtcod.heightmap_add_fbm(noisehm, noise2d,6, 6, 0, 0, 32, 1, 1)
-    #libtcod.heightmap_normalize(noisehm, 0.0, 1.0)
+    libtcod.heightmap_normalize(noisehm, 0.0, 1.0)
     #libtcod.heightmap_multiply_hm(hm, noisehm, hm)
     print '- Apply Simplex -'
 
@@ -559,9 +559,9 @@ def MasterWorldGen():    #------------------------------------------------------
 
 def ReadRaces():
 
-    RacesFile = 'Races.txt'
+    RacesFile = './dist/Races.txt'
 
-    NLines = sum(1 for line in open('Races.txt'))
+    NLines = sum(1 for line in open(RacesFile))
 
     NRaces = NLines / 7
 
@@ -587,9 +587,9 @@ def ReadRaces():
 
 def ReadGovern():
 
-    GovernFile = 'CivilizedGovernment.txt'
+    GovernFile = './dist/CivilizedGovernment.txt'
 
-    NLines = sum(1 for line in open('CivilizedGovernment.txt'))
+    NLines = sum(1 for line in open(GovernFile))
 
     NGovern = NLines / 5
 
@@ -617,7 +617,7 @@ def CivGen(Races,Govern): #-----------------------------------------------------
     Civs = []
 
     for x in range(CIVILIZED_CIVS):
-        libtcod.namegen_parse('/home/lurst/dev/df-style-worldgen/dist/namegen/jice_fantasy.cfg')
+        libtcod.namegen_parse('./dist/namegen/jice_fantasy.cfg')
         Name = libtcod.namegen_generate('Fantasy male')
         libtcod.namegen_destroy ()
 
@@ -638,7 +638,7 @@ def CivGen(Races,Govern): #-----------------------------------------------------
         Civs.append(Civ(Race,Name,Government,Color,Flag,0))
 
     for a in range(TRIBAL_CIVS):
-        libtcod.namegen_parse('namegen/jice_fantasy.cfg')
+        libtcod.namegen_parse('./dist/namegen/jice_fantasy.cfg')
         Name = libtcod.namegen_generate('Fantasy male')
         libtcod.namegen_destroy()
 
@@ -983,7 +983,7 @@ def NormalMap(World):  # -------------------------------------------------------
 ###################################################################################### - Startup - ######################################################################################
 
 #Start Console and set costum font
-libtcod.console_set_custom_font("Andux_cp866ish.png", libtcod.FONT_LAYOUT_ASCII_INROW)
+libtcod.console_set_custom_font("./dist/Andux_cp866ish.png", libtcod.FONT_LAYOUT_ASCII_INROW)
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'pyWorld', False, libtcod.RENDERER_SDL) #Set True for Fullscreen
 
 #Palette
