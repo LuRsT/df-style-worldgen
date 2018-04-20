@@ -32,7 +32,7 @@ class Tile:
         self.precip = precip
         self.drainage = drainage
         self.biome = biome
-        
+
     hasRiver = False
     isCiv = False
 
@@ -40,7 +40,7 @@ class Tile:
     prosperity = 0
 
 class Race:
-      
+
     def __init__(self,Name,PrefBiome,Strenght,Size,ReproductionSpeed,Aggressiveness,Form):
         self.Name = Name
         self.PrefBiome = PrefBiome
@@ -116,7 +116,7 @@ class War:
 # - General Functions -
 
 def ClearConsole():
-    
+
     for x in xrange(SCREEN_WIDTH):
         for y in xrange(SCREEN_HEIGHT):
             libtcod.console_put_char_ex( 0, x, y, ' ', libtcod.black, libtcod.black)
@@ -160,7 +160,7 @@ def FlagGenerator(Color):
 
     for y in range(4):
         for x in range(12):
-        
+
             C = BackFile.read(1)
             while C == '\n':
                 C = BackFile.read(1)
@@ -177,7 +177,7 @@ def FlagGenerator(Color):
             if C == '#':
                 Flag[x][y] = OverColor1
             elif C == '"':
-                Flag[x][y] = OverColor2            
+                Flag[x][y] = OverColor2
 
     BackFile.close()
     OverlayFile.close()
@@ -244,7 +244,7 @@ def PoleGen(hm, NS):
 
     if NS == 0:
         rng = randint(2,5)
-        for i in range(WORLD_WIDTH):      
+        for i in range(WORLD_WIDTH):
                 for j in range(rng):
                     libtcod.heightmap_set_value(hm, i, WORLD_HEIGHT - 1 - j , 0.31)
                 rng += randint(1,3)-2
@@ -255,7 +255,7 @@ def PoleGen(hm, NS):
 
     if NS == 1:
         rng = randint(2,5)
-        for i in range(WORLD_WIDTH):      
+        for i in range(WORLD_WIDTH):
                 for j in range(rng):
                     libtcod.heightmap_set_value(hm, i, j , 0.31)
                 rng += randint(1,3)-2
@@ -274,12 +274,12 @@ def TectonicGen(hm, hor):
     if hor == 1:
         pos = randint(WORLD_HEIGHT/10,WORLD_HEIGHT - WORLD_HEIGHT/10)
         for x in range(WORLD_WIDTH):
-                TecTiles[x][pos] = 1                  
+                TecTiles[x][pos] = 1
                 pos += randint(1,5)-3
                 if pos < 0:
-                    pos = 0            
+                    pos = 0
                 if pos > WORLD_HEIGHT-1:
-                    pos = WORLD_HEIGHT-1            
+                    pos = WORLD_HEIGHT-1
     if hor == 0:
         pos = randint(WORLD_WIDTH/10,WORLD_WIDTH - WORLD_WIDTH/10)
         for y in range(WORLD_HEIGHT):
@@ -288,13 +288,13 @@ def TectonicGen(hm, hor):
                 if pos < 0:
                     pos = 0
                 if pos > WORLD_WIDTH-1:
-                    pos = WORLD_WIDTH-1           
-                  
+                    pos = WORLD_WIDTH-1
+
     #Apply elevation to borders
     for x in xrange(WORLD_WIDTH/10,WORLD_WIDTH - WORLD_WIDTH/10):
         for y in xrange(WORLD_HEIGHT/10,WORLD_HEIGHT - WORLD_HEIGHT/10):
                 if TecTiles[x][y] == 1 and libtcod.heightmap_get_value(hm, x, y) > 0.3:
-                    libtcod.heightmap_add_hill(hm, x, y, randint(2,4), uniform(0.15,0.18))                        
+                    libtcod.heightmap_add_hill(hm, x, y, randint(2,4), uniform(0.15,0.18))
 
     return
 
@@ -319,7 +319,7 @@ def Temperature(temp,hm):
                     if y > WORLD_HEIGHT/2:
                         libtcod.heightmap_set_value(temp, x, y, WORLD_HEIGHT-y-heighteffect)
                     else:
-                        libtcod.heightmap_set_value(temp, x, y, y-heighteffect)                       
+                        libtcod.heightmap_set_value(temp, x, y, y-heighteffect)
 
     return
 
@@ -330,12 +330,12 @@ def Percipitaion(preciphm, temphm):
     for x in xrange(WORLD_WIDTH):
         for y in xrange(WORLD_HEIGHT):
             temp = libtcod.heightmap_get_value(temphm, x, y)
-                        
+
     precip = libtcod.noise_new(2,libtcod.NOISE_DEFAULT_HURST, libtcod.NOISE_DEFAULT_LACUNARITY)
 
     libtcod.heightmap_add_fbm(preciphm,precip ,2, 2, 0, 0, 32, 1, 1)
 
-    libtcod.heightmap_normalize(preciphm, 0.0, 1.0)                       
+    libtcod.heightmap_normalize(preciphm, 0.0, 1.0)
 
     return
 
@@ -361,7 +361,7 @@ def RiverGen(World):
 
     del XCoor[:]
     del YCoor[:]
-      
+
     XCoor.append(X)
     YCoor.append(Y)
 
@@ -424,9 +424,9 @@ def MasterWorldGen():    #------------------------------------------------------
 
     noisehm = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)
     noise2d = libtcod.noise_new(2,libtcod.NOISE_DEFAULT_HURST, libtcod.NOISE_DEFAULT_LACUNARITY)
-    libtcod.heightmap_add_fbm(noisehm, noise2d,6, 6, 0, 0, 32, 1, 1)
-    libtcod.heightmap_normalize(noisehm, 0.0, 1.0)
-    libtcod.heightmap_multiply_hm(hm, noisehm, hm)
+    #libtcod.heightmap_add_fbm(noisehm, noise2d,6, 6, 0, 0, 32, 1, 1)
+    #libtcod.heightmap_normalize(noisehm, 0.0, 1.0)
+    #libtcod.heightmap_multiply_hm(hm, noisehm, hm)
     print '- Apply Simplex -'
 
     PoleGen(hm, 0)
@@ -443,17 +443,17 @@ def MasterWorldGen():    #------------------------------------------------------
     print '- Erosion -'
 
     libtcod.heightmap_clamp(hm, 0.0, 1.0)
-      
+
     #Temperature
-    temp = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)   
+    temp = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)
     Temperature(temp,hm)
     libtcod.heightmap_normalize(temp, 0.0, 1.0)
-    print '- Temperature Calculation -'     
+    print '- Temperature Calculation -'
 
     #Precipitation
 
     preciphm = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)
-    Percipitaion(preciphm, temp)
+    #Percipitaion(preciphm, temp)
     libtcod.heightmap_normalize(preciphm, 0.0, 1.0)
     print '- Percipitaion Calculation -'
 
@@ -461,10 +461,10 @@ def MasterWorldGen():    #------------------------------------------------------
 
     drainhm = libtcod.heightmap_new(WORLD_WIDTH, WORLD_HEIGHT)
     drain = libtcod.noise_new(2,libtcod.NOISE_DEFAULT_HURST, libtcod.NOISE_DEFAULT_LACUNARITY)
-    libtcod.heightmap_add_fbm(drainhm,drain ,2, 2, 0, 0, 32, 1, 1)
+    #libtcod.heightmap_add_fbm(drainhm,drain ,2, 2, 0, 0, 32, 1, 1)
     libtcod.heightmap_normalize(drainhm, 0.0, 1.0)
     print '- Drainage Calculation -'
-      
+
     # VOLCANISM - RARE AT SEA FOR NEW ISLANDS (?) RARE AT MOUNTAINS > 0.9 (?) RARE AT TECTONIC BORDERS (?)
 
     elapsed_time = time.time() - starttime
@@ -478,7 +478,7 @@ def MasterWorldGen():    #------------------------------------------------------
                                    libtcod.heightmap_get_value(temp, x, y),
                                    libtcod.heightmap_get_value(preciphm, x, y),
                                    libtcod.heightmap_get_value(drainhm, x, y),
-                                    0)      
+                                    0)
 
     print '- Tiles Initialized -'
 
@@ -538,12 +538,12 @@ def MasterWorldGen():    #------------------------------------------------------
                 World[x][y].biomeID = 9
             if World[x][y].height > 0.9:
                 World[x][y].biomeID = 10
-                  
-            
+
+
     print '- BiomeIDs Atributed -'
-      
+
     #River Gen
-      
+
     for x in range(1):
         RiverGen(World)
     print '- River Gen -'
@@ -551,7 +551,7 @@ def MasterWorldGen():    #------------------------------------------------------
     #Free Heightmaps
     libtcod.heightmap_delete(hm)
     libtcod.heightmap_delete(temp)
-    libtcod.heightmap_delete(noisehm)                       
+    libtcod.heightmap_delete(noisehm)
 
     print ' * Biomes/Rivers Sorted *'
 
@@ -578,7 +578,7 @@ def ReadRaces():
             Info[y] = data[start:end]
         PreferedBiomes = [int(s) for s in str.split(Info[1]) if s.isdigit()] #Take numbers from string
         Races[x] = Race(Info[0],PreferedBiomes,int(Info[2]),int(Info[3]),int(Info[4]),int(Info[5]),Info[6])
-        
+
     f.close()
 
     print '- Races Read -'
@@ -605,7 +605,7 @@ def ReadGovern():
             end = data.index("\n",start)
             Info[y] = data[start:end]
         Governs[x] = GovernmentType(Info[0],Info[1],int(Info[2]),int(Info[3]),int(Info[4]))
-        
+
     f.close()
 
     print '- Government Types Read -'
@@ -617,44 +617,43 @@ def CivGen(Races,Govern): #-----------------------------------------------------
     Civs = []
 
     for x in range(CIVILIZED_CIVS):
-
-        libtcod.namegen_parse('namegen/jice_fantasy.cfg')
+        libtcod.namegen_parse('/home/lurst/dev/df-style-worldgen/dist/namegen/jice_fantasy.cfg')
         Name = libtcod.namegen_generate('Fantasy male')
         libtcod.namegen_destroy ()
 
         Name += " Civilization"
 
         Race = Races[randint(0,len(Races)-1)]
-        while Race.Form != "civilized":
-            Race = Races[randint(0,len(Races)-1)]
-        
+        # Gets stuck here
+        #while Race.Form != "civilized":
+        #    Race = Races[randint(0,len(Races)-1)]
+
         Government = Govern[randint(0,len(Govern)-1)]
 
         Color = Palette[randint(0,len(Palette)-1)]
 
         Flag = FlagGenerator(Color)
-      
+
         #Initialize Civ
         Civs.append(Civ(Race,Name,Government,Color,Flag,0))
 
     for a in range(TRIBAL_CIVS):
-
         libtcod.namegen_parse('namegen/jice_fantasy.cfg')
         Name = libtcod.namegen_generate('Fantasy male')
-        libtcod.namegen_destroy ()
+        libtcod.namegen_destroy()
 
         Name += " Tribe"
 
         Race = Races[randint(0,len(Races)-1)]
-        while Race.Form != "tribal":
-            Race = Races[randint(0,len(Races)-1)]
-        
+        #while Race.Form != "tribal":
+        #    Race = Races[randint(0,len(Races)-1)]
+
         Government = GovernmentType("Tribal","*PLACE HOLDER*",2,50,0)
 
         Color = libtcod.Color(randint(0,255),randint(0,255),randint(0,255))
 
         Flag = FlagGenerator(Color)
-      
+
         #Initialize Civ
         Civs.append(Civ(Race,Name,Government,Color,Flag,0))
 
@@ -678,7 +677,9 @@ def SetupCivs(Civs, World, Chars, Colors):
                 for g in range (len(Civs[x].Race.PrefBiome)):
                     if World[i][j].biomeID == Civs[x].Race.PrefBiome[g]:
                         Civs[x].SuitableSites.append(CivSite(i,j,"",1,0))
-            
+
+        if not Civs[x].SuitableSites:
+            continue
         rand = randint(0,len(Civs[x].SuitableSites)-1)
         while World[Civs[x].SuitableSites[rand].x][Civs[x].SuitableSites[rand].y].isCiv == True:
             del Civs[x].SuitableSites[rand]
@@ -688,25 +689,25 @@ def SetupCivs(Civs, World, Chars, Colors):
         Y = Civs[x].SuitableSites[rand].y
 
         World[X][Y].isCiv = True
-        
+
         FinalProsperity = World[X][Y].prosperity * 150
         if World[X][Y].hasRiver:
             FinalProsperity = FinalProsperity * 1.5
         PopCap = 4 * Civs[x].Race.ReproductionSpeed + FinalProsperity
         PopCap = PopCap * 2 #Capital Bonus
         PopCap = round(PopCap)
-        
+
         Civs[x].Sites.append (CivSite(X,Y,"Village",0,PopCap))
 
         Civs[x].Sites[0].isCapital = True
-        
+
         Civs[x].Sites[0].Population = 20
 
         Chars[X][Y] = 31
         Colors[X][Y] = Civs[x].Color
 
         Civs[x].PrintInfo()
-        
+
     print '- Civs Setup -'
 
     print ' * Civ Gen DONE *'
@@ -720,7 +721,7 @@ def NewSite(Civ, Origin, World,Chars,Colors):
     rand = randint(0,len(Civ.SuitableSites)-1)
 
     Tries = 0
-    
+
     while PointDistRound(Origin.x, Origin.y, Civ.SuitableSites[rand].x, Civ.SuitableSites[rand].y) > EXPANSION_DISTANCE or World[Civ.SuitableSites[rand].x][Civ.SuitableSites[rand].y].isCiv:
         if Tries > 200:
             return Civ
@@ -734,12 +735,12 @@ def NewSite(Civ, Origin, World,Chars,Colors):
 
     FinalProsperity = World[X][Y].prosperity * 150
     if World[X][Y].hasRiver:
-        FinalProsperity = FinalProsperity * 1.5    
+        FinalProsperity = FinalProsperity * 1.5
     PopCap = 3 * Civ.Race.ReproductionSpeed + FinalProsperity
     PopCap = round(PopCap)
-    
+
     Civ.Sites.append ( CivSite(X,Y,"Village",0,PopCap) )
-    
+
     Civ.Sites[len(Civ.Sites)-1].Population = 20
 
     Chars[X][Y] = 31
@@ -753,13 +754,13 @@ def NewSite(Civ, Origin, World,Chars,Colors):
 def ProcessCivs(World,Civs,Chars,Colors,Month):
 
     print "------------------------------------------"
-    
+
     for x in range(CIVILIZED_CIVS+TRIBAL_CIVS):
 
         print Civs[x].Name
         print Civs[x].Race.Name
 
-        Civs[x].TotalPopulation = 0                                
+        Civs[x].TotalPopulation = 0
 
         #Site
         for y in range(len(Civs[x].Sites)):
@@ -769,7 +770,7 @@ def ProcessCivs(World,Civs,Chars,Colors,Month):
 
             if Civs[x].Sites[y].Population > Civs[x].Sites[y].popcap / 2:
                 NewPop /= 6
-                
+
             Civs[x].Sites[y].Population += NewPop
 
             #Expand
@@ -807,7 +808,7 @@ def ProcessCivs(World,Civs,Chars,Colors,Month):
                                                     Civs[x],
                                                     Civs[x].TotalPopulation * Civs[x].Government.Militarization / 100)
                                 Civs[x].atWar = True
-                                
+
             print "X:",Civs[x].Sites[y].x,"Y:",Civs[x].Sites[y].y,"Population:",Civs[x].Sites[y].Population
 
         print Civs[x].Army.x,Civs[x].Army.y,Civs[x].Army.Size,'\n'
@@ -818,9 +819,9 @@ def ProcessCivs(World,Civs,Chars,Colors,Month):
 
 # --------------------------------------------------------------------------------- Print Map (Terrain) --------------------------------------------------------------------------------
 
-def TerrainMap(World):  
+def TerrainMap(World):
     for x in xrange(WORLD_WIDTH):
-        for y in xrange(WORLD_HEIGHT):          
+        for y in xrange(WORLD_HEIGHT):
             hm_v = World[x][y].height
             libtcod.console_put_char_ex( 0, x, y + SCREEN_HEIGHT/2 - WORLD_HEIGHT/2, '0' , libtcod.blue, libtcod.black)
             if hm_v > 0.1:
@@ -842,7 +843,7 @@ def TerrainMap(World):
             if hm_v > 0.9:
                 libtcod.console_put_char_ex( 0, x, y + SCREEN_HEIGHT/2 - WORLD_HEIGHT/2, '9', libtcod.light_gray, libtcod.black)
             if hm_v > 0.99:
-                libtcod.console_put_char_ex( 0, x, y + SCREEN_HEIGHT/2 - WORLD_HEIGHT/2, '^', libtcod.darker_gray, libtcod.black)                    
+                libtcod.console_put_char_ex( 0, x, y + SCREEN_HEIGHT/2 - WORLD_HEIGHT/2, '^', libtcod.darker_gray, libtcod.black)
     libtcod.console_flush()
     return
 
@@ -851,13 +852,13 @@ def BiomeMap(Chars,Colors):
     for x in xrange(WORLD_WIDTH):
         for y in xrange(WORLD_HEIGHT):
             libtcod.console_put_char_ex( 0, x, y + SCREEN_HEIGHT/2 - WORLD_HEIGHT/2, Chars[x][y] , Colors[x][y], libtcod.black)
-                                                   
+
     libtcod.console_flush()
     return
 
 def HeightGradMap(World):  # ------------------------------------------------------------ Print Map (Heightmap Gradient) -------------------------------------------------------------------
     for x in xrange(WORLD_WIDTH):
-        for y in xrange(WORLD_HEIGHT):          
+        for y in xrange(WORLD_HEIGHT):
             hm_v = World[x][y].height
             HeightColor = libtcod.Color(255,255,255)
             libtcod.color_set_hsv(HeightColor,0,0,hm_v ) #Set lightness to hm_v so higher heightmap value -> "whiter"
@@ -968,7 +969,7 @@ def NormalMap(World):  # -------------------------------------------------------
             15: lightgreen,
             16: darkgreen
         }[x]
-      
+
     for x in xrange(WORLD_WIDTH):
         for y in xrange(WORLD_HEIGHT):
             Chars[x][y] = SymbolDictionary(World[x][y].biomeID)
@@ -980,7 +981,7 @@ def NormalMap(World):  # -------------------------------------------------------
     return Chars, Colors
 
 ###################################################################################### - Startup - ######################################################################################
-      
+
 #Start Console and set costum font
 libtcod.console_set_custom_font("Andux_cp866ish.png", libtcod.FONT_LAYOUT_ASCII_INROW)
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'pyWorld', False, libtcod.RENDERER_SDL) #Set True for Fullscreen
@@ -1039,8 +1040,8 @@ while not libtcod.console_is_window_closed():
     #Simulation
     while isRunning == True:
 
-        ProcessCivs(World,Civs,Chars,Colors,Month)            
-            
+        ProcessCivs(World,Civs,Chars,Colors,Month)
+
         #DEBUG Print Mounth
         Month+=1
         print 'Month: ',Month
@@ -1057,7 +1058,7 @@ while not libtcod.console_is_window_closed():
         if needUpdate:
             BiomeMap(Chars,Colors)
             needUpdate = False
-      
+
     key = libtcod.console_wait_for_keypress(True)
 
     #Start Simulation
@@ -1069,10 +1070,10 @@ while not libtcod.console_is_window_closed():
     #Profiler
     if libtcod.console_is_key_pressed(libtcod.KEY_ESCAPE):
         isRunning = False
-        
+
         pr.disable()
-        pr.print_stats(sort='time')        
-      
+        pr.print_stats(sort='time')
+
     if key.vk == libtcod.KEY_CHAR:
         if key.c == ord('t'):
             TerrainMap(World)
@@ -1099,75 +1100,5 @@ while not libtcod.console_is_window_closed():
             Govern = ReadGovern()
             Civs = CivGen(Races,Govern)
             Chars, Colors = NormalMap(World)
-            SetupCivs(Civs, World, Chars, Colors)            
+            SetupCivs(Civs, World, Chars, Colors)
             BiomeMap(Chars,Colors)
-
-
-
-
-
-
-      
-            
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
